@@ -6,6 +6,7 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var connectionString = process.env.DATABASE_URL||"postgres://mirandange:300323076@depot:5432/mirandange_jdbc";
 var client = new pg.Client(connectionString);
+var passport = require('passport');
 client.connect();
 
 /*------------------------------*/
