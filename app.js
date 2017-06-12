@@ -8,6 +8,32 @@ var connectionString = process.env.DATABASE_URL||"postgres://mirandange:30032307
 var client = new pg.Client(connectionString);
 client.connect();
 
+/*------------------------------*/
+
+var Strategy	=	require('passport-facebook').Strategy;
+passport.use(new	FacebookStrategy({
+    clientID:	1318994721499964,
+    clientSecret:419b5142fda611cc073f398fb03b5761,
+callbackURL:	"https://bookwork-storybook-bookstore.herokuapp.com/auth/facebook/callback"
+},
+
+function(accessToken,	refreshToken,	profile,	cb)	{
+    User.findOrCreate({	facebookId:	profile.id	},	function	(err, user)	{
+        return	cb(err,	user);
+    });			}));
+
+app.get('/auth/facebook',
+    passport.authenticate('facebook'));
+
+app.get('/auth/facebook/callback',
+    passport.authenticate('facebook',	{	failureRedirect:	'/login'	}),
+    function(req,	res)	{
+//	Successful	authentication,	redirect	home.
+        res.redirect('/');
+    });
+
+/*------------------------------*/
+
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({
   extended: true
