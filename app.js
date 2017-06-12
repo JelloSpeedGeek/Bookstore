@@ -77,7 +77,8 @@ app.post('/register', function (req, res) {
   query.on('end', function () {
   		/*redirect is for if we want it to go back to the homepage after registering.*/
   		res.redirect("/");
-  })
+  });
+  
   query.on('error', function(err) {
       console.log(err);
   });
