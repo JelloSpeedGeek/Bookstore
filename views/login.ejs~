@@ -30,7 +30,7 @@
 	
 	<div class="container">
    	<h2>Welcome to the Login Page</h2>
-   		<form action="/userLogin" method="post">
+   		<form action="/userLogin" method="get">
 			<h3>Username:</h3>
 				<input name="username" type="text" id="username" placeholder="Please enter in your username"><br>
 			<h3>Password:</h3>
