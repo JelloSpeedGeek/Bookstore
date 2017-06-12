@@ -14,7 +14,7 @@ client.connect();
 var Strategy	=	require('passport-facebook').Strategy;
 passport.use(new	FacebookStrategy({
     clientID:	1318994721499964,
-    clientSecret:419b5142fda611cc073f398fb03b5761,
+    clientSecret:"419b5142fda611cc073f398fb03b5761",
 callbackURL:	"https://bookwork-storybook-bookstore.herokuapp.com/auth/facebook/callback"
 },
 
