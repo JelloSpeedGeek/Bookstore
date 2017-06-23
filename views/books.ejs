@@ -1,33 +1,10 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-	
-   	<meta charset="UTF-8">
-		<title>Group Project!</title>
-		<link href="css/stylesheet.css" rel="stylesheet">
+    	<% include ./Layout/header.ejs %>
 	</head>
-	
-	<body>
 
-	<header>
-		<h1>Bookworm Storybook Bookstore!</h1>
-		<div class="container_searchbar">
-			Search: <input type="text" id="search" placeholder="Please enter in search here">
-			<a href="/search" class="btn btn-info" role="button">Search</a>
-			<a href="/register" class="btn btn-info" role="button">Register</a>
-			<a href="/login" class="btn btn-info" role="button">Login</a>
-		</div>
-		<div  class="button-strip">
-			<a href="/" class="btn btn-info" role="button">Home</a> 
-			<a href="/authors" class="btn btn-info" role="button">Authors</a> 
-			<a href="/books" class="btn btn-info" role="button">Books</a> 
-			<a href="/genres" class="btn btn-info" role="button">Genres</a> 
-		</div>
-			
-	</header>
+	<body>
 	
 	<div class="container">
    	<h1>Welcome to the Books Page.</h1>
@@ -41,8 +18,9 @@
 
 	</div>
 
-	<footer>
-	</footer>
+		<footer>
+            <% include ./Layout/footer.ejs %>
+		</footer>
 	
 	</body>
 </html> 

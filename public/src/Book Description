@@ -1,85 +1,94 @@
 Book 1:
  
-bookname: 50 Shades of Grey
+bookname: '50 Shades of Grey'
 
-author: E. L. James
+author: 'E. L. James'
 
-genres: Romance
+genres: 'Romance'
 
-imageurl: src/50ShadesofGrey.jpg
+imageurl: 'src/50ShadesofGrey.jpg'
 
-description: Fifty Shades of Grey is a 2011 erotic romance novel by British author E. L. James. It is the first instalment in the Fifty Shades trilogy that traces the deepening relationship between a college graduate, Anastasia Steele, and a young business magnate, Christian Grey. It is notable for its explicitly erotic scenes featuring elements of sexual practices involving bondage/discipline, dominance/submission, and sadism/masochism (BDSM). Originally self-published as an ebook and a print-on-demand, publishing rights were acquired by Vintage Books in March 2012.
+description: 'Fifty Shades of Grey is a 2011 erotic romance novel by British author E. L. James. It is the first instalment in the Fifty Shades trilogy that traces the deepening relationship between a college graduate, Anastasia Steele, and a young business magnate, Christian Grey. It is notable for its explicitly erotic scenes featuring elements of sexual practices involving bondage/discipline, dominance/submission, and sadism/masochism (BDSM).'
 
 quantity: 50
 
+insert into bookinfo (bookname,author,genres,imageurl,description,quantity) VALUES ('50 Shades of Grey','E. L. James','Romance','src/50ShadesofGrey.jpg','Fifty Shades of Grey is a 2011 erotic romance novel by British author E. L. James. It is the first instalment in the Fifty Shades trilogy that traces the deepening relationship between a college graduate, Anastasia Steele, and a young business magnate, Christian Grey. It is notable for its explicitly erotic scenes featuring elements of sexual practices involving bondage/discipline, dominance/submission, and sadism/masochism (BDSM).',50);c
+
 Book 2: 
 
-bookname: Hobbit
+bookname: 'Hobbit'
 
-author: J. R. R. Tolkien
+author: 'J. R. R. Tolkien'
 
-genres: Adventure
+genres: 'Adventure'
 
-imageurl: src/Hobbit.jpg
+imageurl: 'src/Hobbit.jpg'
 
-description: The Hobbit, or There and Back Again is a children's fantasy novel by English author J. R. R. Tolkien. It was published on 21 September 1937 to wide critical acclaim, being nominated for the Carnegie Medal and awarded a prize from the New York Herald Tribune for best juvenile fiction. The book remains popular and is recognized as a classic in children's literature.
-
-The Hobbit is set in a time "between the Dawn of Færie and the Dominion of Men",[1] and follows the quest of home-loving hobbit Bilbo Baggins to win a share of the treasure guarded by Smaug the dragon. Bilbo's journey takes him from light-hearted, rural surroundings into more sinister territory.[2]
+description: 'The Hobbit, or There and Back Again is a childrens fantasy novel by English author J. R. R. Tolkien. It was published on 21 September 1937 to wide critical acclaim, being nominated for the Carnegie Medal and awarded a prize from the New York Herald Tribune for best juvenile fiction. The book remains popular and is recognized as a classic in children's literature.
+The Hobbit is set in a time between the Dawn of Færie and the Dominion of Men,[1] and follows the quest of home-loving hobbit Bilbo Baggins to win a share of the treasure guarded by Smaug the dragon. Bilbos journey takes him from light-hearted, rural surroundings into more sinister territory.[2]'
 
 quantity: 3
 
+insert into bookinfo (bookname,author,genres,imageurl,description,quantity) VALUES ('Hobbit','J. R. R. Tolkien','Adventure','src/Hobbit.jpg','The Hobbit, or There and Back Again is a childrens fantasy novel by English author J. R. R. Tolkien. It was published on 21 September 1937 to wide critical acclaim, being nominated for the Carnegie Medal and awarded a prize from the New York Herald Tribune for best juvenile fiction. The book remains popular and is recognized as a classic in childrens literature. The Hobbit is set in a time between the Dawn of Færie and the Dominion of Men,[1] and follows the quest of home-loving hobbit Bilbo Baggins to win a share of the treasure guarded by Smaug the dragon. Bilbos journey takes him from light-hearted, rural surroundings into more sinister territory.[2]',3);
+
 Book 3: 
 
-bookname: Kill Bill
+bookname: 'Kill Bill'
 
-author: D. K. Holm
+author: 'D. K. Holm'
 
-genres: Action
+genres: 'Action'
 
-imageurl: src/KillBill.jpg
+imageurl: 'src/KillBill.jpg'
 
-description: When young writer-director Quentin Tarantino burst onto the scene in 1992 with Reservoir Dogs, it was clear that a major new voice in filmmaking had arrived. A knock-out storyteller with a gift for fiery dialogue and a unique take on human violence, Tarantino took home the coveted Palme D'Or Award at Cannes only two years later for his extraordinary Pulp Fiction---which went on to earn him an Oscar for Best Original Screenplay. Kill Bill is Tarantino's debut novel, an extraordinary work of fiction that will speak powerfully to his many admirers. It's the story of The Bride, a world-class assassin and a retired member of the elite, all-female Deadly Viper Assassination Squad (DiVAS), who's ready to settle down to a quiet life of marriage and family. But the DiVAS, led by their ruthless leader Bill, have other plans for her. They turn up at The Bride's wedding, murder her entire wedding party, leaving her and her unborn child for dead. Five years later, The Bride awakens from a coma and sets out on an international rampage to enact revenge on Bill and the gang. Wickedly funny, black as night and shot through with razor-edged dialogue, Kill Bill is Tarantino in a new medium --- a stunning new incarnation of his unique talent. The brilliant, devastatingly original debut novel from legendary filmmaker Quentin Tarantino
+description: 'When young writer-director Quentin Tarantino burst onto the scene in 1992 with Reservoir Dogs, it was clear that a major new voice in filmmaking had arrived. A knock-out storyteller with a gift for fiery dialogue and a unique take on human violence, Tarantino took home the coveted Palme D'Or Award at Cannes only two years later for his extraordinary Pulp Fiction which went on to earn him an Oscar for Best Original Screenplay. Kill Bill is Tarantinos debut novel, an extraordinary work of fiction that will speak powerfully to his many admirers. Its the story of The Bride, a world-class assassin and a retired member of the elite, all-female Deadly Viper Assassination Squad (DiVAS), whos ready to settle down to a quiet life of marriage and family. But the DiVAS, led by their ruthless leader Bill, have other plans for her. They turn up at The Brides wedding, murder her entire wedding party, leaving her and her unborn child for dead. Five years later, The Bride awakens from a coma and sets out on an international rampage to enact revenge on Bill and the gang. Wickedly funny, black as night and shot through with razor-edged dialogue, Kill Bill is Tarantino in a new medium a stunning new incarnation of his unique talent. The brilliant, devastatingly original debut novel from legendary filmmaker Quentin Tarantino.'
 
 quantity: 15
 
+insert into bookinfo (bookname,author,genres,imageurl,description,quantity) VALUES ('Kill Bill','D. K. Holm','Action','src/KillBill.jpg','When young writer-director Quentin Tarantino burst onto the scene in 1992 with Reservoir Dogs, it was clear that a major new voice in filmmaking had arrived. A knock-out storyteller with a gift for fiery dialogue and a unique take on human violence, Tarantino took home the coveted Palme DOr Award at Cannes only two years later for his extraordinary Pulp Fiction which went on to earn him an Oscar for Best Original Screenplay. Kill Bill is Tarantinos debut novel, an extraordinary work of fiction that will speak powerfully to his many admirers. Its the story of The Bride, a world-class assassin and a retired member of the elite, all-female Deadly Viper Assassination Squad (DiVAS), whos ready to settle down to a quiet life of marriage and family. But the DiVAS, led by their ruthless leader Bill, have other plans for her.'
+,15);
+
+
 Book 4:
  
-bookname:The Da Vinci Code
+bookname: 'The Da Vinci Code'
 
-author:Dan Brown
+author: 'Dan Brown'
 
-genres:Mystery
+genres: 'Mystery'
 
-imageurl: src/DaVinciCode.jpg
+imageurl: 'src/DaVinciCode.jpg'
 
-description:The Da Vinci Code is a 2003 mystery-detective novel by Dan Brown. It follows symbologist Robert Langdon and cryptologist Sophie Neveu after a murder in the Louvre Museum in Paris, when they become involved in a battle between the Priory of Sion and Opus Dei over the possibility of Jesus Christ having been a companion to Mary Magdalene. The title of the novel refers, among other things, to the finding of the first murder victim in the Grand Gallery of the Louvre, naked and posed similar to Leonardo da Vinci's famous drawing, the Vitruvian Man, with a cryptic message written beside his body and a pentacle drawn on his chest in his own blood.
+description: 'The Da Vinci Code is a 2003 mystery-detective novel by Dan Brown. It follows symbologist Robert Langdon and cryptologist Sophie Neveu after a murder in the Louvre Museum in Paris, when they become involved in a battle between the Priory of Sion and Opus Dei over the possibility of Jesus Christ having been a companion to Mary Magdalene. The title of the novel refers, among other things, to the finding of the first murder victim in the Grand Gallery of the Louvre, naked and posed similar to Leonardo da Vinci's famous drawing, the Vitruvian Man, with a cryptic message written beside his body and a pentacle drawn on his chest in his own blood.'
 
-quantity:01123581321
+quantity: 5
 
 Book 5:
 
-bookname:The complete art of war
+bookname: 'The complete art of war'
 
-author: Sun Tzu
+author: 'Sun Tzu'
 
-genres:Philosophy
+genres: 'Philosophy'
 
-imageurl: src/TheArtOfWar.jpg
+imageurl: 'src/TheArtOfWar.jpg'
 
-description:The Art of War is an ancient Chinese military treatise dating from the 5th century BC and is attributed to the ancient Chinese military strategist Sun Tzu
+description: 'The Art of War is an ancient Chinese military treatise dating from the 5th century BC and is attributed to the ancient Chinese military strategist Sun Tzu'
 
 quantity:16
 
 Book 6:
 
-bookname:Harry Potter and the Philosopher's Stone
+bookname:'Harry Potter and the Philosopher's Stone'
 
-author: J.K. Rowling
+author: 'J.K. Rowling'
 
-genres:Fantasy Fiction
+genres: 'Fantasy Fiction'
 
-imageurl: src/HarryPotter.jpg
+imageurl: 'src/HarryPotter.jpg'
 
-description:Harry Potter and the Philosopher's Stone is the first novel in the Harry Potter series and J. K. Rowling's debut novel, first published in 1997 by Bloomsbury.
+description:'Harry Potter and the Philosopher's Stone is the first novel in the Harry Potter series and J. K. Rowling's debut novel, first published in 1997 by Bloomsbury.'
 
 quantity:23
+
+insert into bookinfo (bookname,author,genres,imageurl,description,quantity) VALUES('Harry Potter and the Philosophers Stone','J.k. Rowling','Fantasy Fiction','src/HarryPotter.jpg','Harry Potter and the Philosophers Stone is the first novel in the Harry Potter series and J. K. Rowlings debut novel, first published in 1997 by Bloomsbury.',23);
