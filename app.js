@@ -1,4 +1,4 @@
- var express = require('express');
+var express = require('express');
 var app = express();
 var port = process.env.PORT || 8080;
 var pg = require('pg');
@@ -106,5 +106,22 @@ app.post('/userLogin', function (req, res) {
     query.on('error', function(err) {
         console.log(err);
     });
+
 });
+
+ app.get('/get_all_books', function (request, response) {
+     var query = client.query("SELECT bookname FROM bookinfo");
+     var results = []
+     query.on('row', function (row) {
+         results.push(row);
+     });
+
+     query.on('end', function () {
+         response.json(results);
+     });
+
+     query.on('error', function (err) {
+         console.log(err);
+     });
+ });
 
