@@ -134,12 +134,26 @@ app.get('/genres', function (req, res) {
 });
 
 app.get('/search', function (req, res) {
-    res.render('search', {
+    var search = req.query.search;
+    console.log(search);
+    var results = [];
+    var query = client.query("select * from bookinfo where bookname like '%" + search + "%'", function(err, result){
+        if(err){
+            console.log(err);
+            res.send('Cannot get item from mens');
+            return;
+        }
     });
-});
 
-app.get('/register', function (req, res) {
-    res.render('register', {
+    query.on('row', function(row){
+        results.push(row);
+    });
+
+    query.on('end', function(){
+        // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
+        res.render('search', {
+            results: results
+        });
     });
 });
 

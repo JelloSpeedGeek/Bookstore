@@ -7,7 +7,14 @@
 	<body>
 
 	<div class="container">
-   	<p>Welcome to the Search Result Page</p>
+		<h2>Welcome to the Search Page</h2>
+		<% if (results.length) { %>
+			<% for(var i = 0; i < results.length; i++) { %>
+		<li><a href="/bookinfo/<%= results[i].id %>"><%= results[i].bookname %></a></li>
+			<% } %>
+		<% } else { %>
+			<p>Sorry no results found</p>
+		<% } %>
 	</div>
 
 		<footer>

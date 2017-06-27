@@ -8,3 +8,8 @@ psql --host=ec2-23-21-224-199.compute-1.amazonaws.com --username=qxztjquipmttef 
 create table bookinfo (id serial primary key, bookname varchar(255) not null, author varchar(255) not null, genres varchar(255) not null, imageurl varchar(255) not null, description varchar(1000) not null, quantity integer not null);
 ad4a32b5b1780f3a9c6140818e8862c8cefeda25c926a518d68c9d504a51ed8a
 rm -rf .local/share/heroku/
+
+Backup Code:
+
+Search: <input type="text" id="search" placeholder="Please enter in search here">
+        <a href="/search" class="btn btn-info" role="button">Search</a>
