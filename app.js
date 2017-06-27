@@ -135,9 +135,8 @@ app.get('/genres', function (req, res) {
 
 app.get('/search', function (req, res) {
     var search = req.query.search;
-    console.log(search);
     var results = [];
-    var query = client.query("select * from bookinfo where bookname like '%" + search + "%'", function(err, result){
+    var query = client.query("select * from bookinfo where bookname like '%" + search + "%' or author like '%" + search + "%' or genres like '%" + search + "%'", function(err, result){
         if(err){
             console.log(err);
             res.send('Cannot get item from mens');
