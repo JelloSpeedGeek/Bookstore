@@ -7,7 +7,10 @@
 	<body>
 	
 	<div class="container">
-   	<p>Welcome to the Genres Page</p>
+		<h2>Welcome to the Genres Page</h2>
+        <% for(var i = 0; i < results.length; i++) { %>
+		<li><%= results[i].genres %></li>
+        <% } %>
 	</div>
 
 		<footer>

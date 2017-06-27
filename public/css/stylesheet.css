@@ -54,7 +54,7 @@ footer {
     width: 100%;
     height: 130px;
     position: absolute;
-    bottom: 0;
+    bottom: 100px;
     border-top-style: solid;
     border-color: #d0451b;
 }

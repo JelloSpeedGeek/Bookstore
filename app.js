@@ -42,7 +42,24 @@ app.get('/', function (req, res) {
 });
 
 app.get('/authors', function (req, res) {
-    res.render('authors', {
+    var results = [];
+    var query = client.query("SELECT id, author FROM bookinfo;", function(err, result){
+        if(err){
+            console.log("Error getting mens items");
+            res.send('Cannot get item from mens');
+            return;
+        }
+    });
+
+    query.on('row', function(row){
+        results.push(row);
+    });
+
+    query.on('end', function(){
+        // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
+        res.render('authors', {
+            results: results
+        });
     });
 });
 
@@ -95,7 +112,24 @@ app.get('/bookinfo/:id', function(req, res){
 });
 
 app.get('/genres', function (req, res) {
-    res.render('genres', {
+    var results = [];
+    var query = client.query("SELECT id, genres FROM bookinfo;", function(err, result){
+        if(err){
+            console.log("Error getting mens items");
+            res.send('Cannot get item from mens');
+            return;
+        }
+    });
+
+    query.on('row', function(row){
+        results.push(row);
+    });
+
+    query.on('end', function(){
+        // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
+        res.render('genres', {
+            results: results
+        });
     });
 });
 
