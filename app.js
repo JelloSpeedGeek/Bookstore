@@ -47,7 +47,45 @@ app.get('/authors', function (req, res) {
 });
 
 app.get('/books', function (req, res) {
-    res.render('books', {
+    var results = [];
+    var query = client.query("SELECT id, bookname FROM bookinfo;", function(err, result){
+        if(err){
+            console.log("Error getting mens items");
+            res.send('Cannot get item from mens');
+            return;
+        }
+    });
+
+    query.on('row', function(row){
+        results.push(row);
+    });
+
+    query.on('end', function(){
+        // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
+        res.render('books', {
+            results: results
+        });
+    });
+});
+
+app.get('/bookinfo/:id', function(req, res){
+    var data = {};
+    var id = req.params.id;
+    var query = client.query("SELECT * FROM bookinfo where id=$1;", [id], function(err, result){
+        if(err){
+            console.log("Error getting mens items");
+            res.send('Cannot get item from mens');
+            return;
+        }
+    });
+
+    query.on('row', function(row){
+        data.bookname = row.bookname;
+    });
+
+    query.on('end', function(){
+        // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
+        res.render('bookinformation', data);
     });
 });
 
@@ -108,20 +146,4 @@ app.post('/userLogin', function (req, res) {
     });
 
 });
-
- app.get('/get_all_books', function (request, response) {
-     var query = client.query("SELECT bookname FROM bookinfo");
-     var results = []
-     query.on('row', function (row) {
-         results.push(row);
-     });
-
-     query.on('end', function () {
-         response.json(results);
-     });
-
-     query.on('error', function (err) {
-         console.log(err);
-     });
- });
 

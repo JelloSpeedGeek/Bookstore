@@ -8,11 +8,9 @@
 	
 	<div class="container">
    	<h2>Welcome to the Books Page.</h2>
-		<form action="/get_all_books" method="get">
-			Bookname: <input type="text" name="bookname"><br>
-
-			<button type="submit">Submit</button>
-		</form>
+        <% for(var i = 0; i < results.length; i++) { %>
+		<li><a href="/bookinfo/<%= results[i].id %>"><%= results[i].bookname %></a></li>
+        <% } %>
 	</div>
 
 		<footer>
