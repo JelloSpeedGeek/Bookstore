@@ -81,6 +81,11 @@ app.get('/bookinfo/:id', function(req, res){
 
     query.on('row', function(row){
         data.bookname = row.bookname;
+        data.author = row.author;
+        data.genres = row.genres;
+        data.imageurl = row.imageurl;
+        data.description = row.description;
+        data.quantity = row.quantity;
     });
 
     query.on('end', function(){
@@ -109,14 +114,12 @@ app.post('/register', function (req, res) {
   var lastname = req.body.lastname;
   var username = req.body.username;
   var password = req.body.password;
-  
   var queryString = "insert into userinfo (firstname,lastname,username,password) values ('" + firstname + "','" + lastname + "','" + username + "','" + password + "')";
   var query = client.query(queryString);
   query.on('end', function () {
   		/*redirect is for if we want it to go back to the homepage after registering.*/
   		res.redirect("/");
   });
-  
   query.on('error', function(err) {
       console.log(err);
   });
@@ -130,13 +133,11 @@ app.get('/login', function (req, res) {
 app.post('/userLogin', function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
-
     var queryString = "select * from userinfo where username = '"+username+"' and password = '"+password+"';";
     var query = client.query(queryString);
 	query.on('row', function(row){
 			console.log(row);
-	})    
-    
+	})
     query.on('end', function () {
     	/*redirect is for if we want it to go back to the homepage after registering.*/
     	res.redirect("/");
@@ -144,6 +145,4 @@ app.post('/userLogin', function (req, res) {
     query.on('error', function(err) {
         console.log(err);
     });
-
 });
-
