@@ -16,10 +16,19 @@
         <form action="/search" method="get">
             <h3>Search:</h3>
             <input name="search" type="text" id="search" placeholder="Please enter in your search..."><br>
-            <button type="submit">Search!</button>
+            <button type="submit">Submit</button>
         </form>
-        <a href="/register" class="btn btn-info" role="button">Register</a>
-        <a href="/login" class="btn btn-info" role="button">Login</a>
+       <% if (login==true) { %>
+       <% if (basket==true) { %>
+				<a href="/logout" class="btn btn-info" role="button">Logout</a>
+                <a href="/checkout" class="btn btn-info" role="button">Checkout</a>
+                <% } else { %>
+                <a href="/logout" class="btn btn-info" role="button">Logout</a>
+                <% } %>
+				<% } else { %>
+                 <a href="/register" class="btn btn-info" role="button">Register</a>
+				 <a href="/login" class="btn btn-info" role="button">Login</a>              
+					<% } %>
     </div>
     <div  class="button-strip">
         <a href="/" class="btn btn-info" role="button">Home</a>

@@ -9,14 +9,27 @@ var passportFacebook = require( 'passport-facebook' );
 var initializedPassport = passport.initialize();
 var passportSession = passport.session();
 var port = process.env.PORT || 8080;
-var userID;c
+var userID;
 var localDBUrl = "postgres://qxztjquipmttef:ad4a32b5b1780f3a9c6140818e8862c8cefeda25c926a518d68c9d504a51ed8a@ec2-23-21-224-199.compute-1.amazonaws.com:5432/dk2rd0ji5gf1c";
 var basket = false;
 var pg = require('pg');
 var path = require('path');
+var url = require("url");
+
 var bodyParser = require('body-parser');
-var connectionString = process.env.DATABASE_URL//||"postgres://mirandange:300323076@depot:5432/mirandange_jdbc";
-var client = new pg.Client(connectionString);
+var databaseUrl = process.env.DATABASE_URL || localDBUrl;
+var params = url.parse(databaseUrl);
+var auth = params.auth.split(':');
+
+var config = {
+    user: auth[0],
+    password: auth[1],
+    host: params.hostname,
+    port: params.port,
+    database: params.pathname.split('/')[1],
+    ssl: true   // NOTICE: if connecting on local db, this should be false
+};
+var client = new pg.Client(config);
 client.connect();
 var session = expressSession({
     secret: '60dd06aa-cf8e-4cf8-8925-6de720015ebf',
@@ -45,7 +58,8 @@ function findUser(id) {
 var facebookAuth = {
         'clientID'        : '1318994721499964', // facebook App ID
         'clientSecret'    : '419b5142fda611cc073f398fb03b5761', // facebook App Secret
-        'callbackURL'     : 'https://hamid-test.herokuapp.com/auth/facebook/callback'
+        'callbackURL'     : 'https://bookwork-storybook-bookstore.herokuapp.com/',
+        'profileFields': ['id', 'email', 'gender', 'link', 'locale', 'name', 'timezone', 'updated_time', 'verified'],
     };
 
 
@@ -75,10 +89,13 @@ passport.use( new passportFacebook( {
         clientSecret: facebookAuth.clientSecret,
         callbackURL: facebookAuth.callbackURL
     },
+   
     function (token, refreshToken, profile, done) {
+    console.log("should be here");
     var user = findUser(profile.id);
     var exists = false;
     userID = profile.id;
+    window.alert("How are you?");
     var queryString1 = "select exists(select 1 from userinfo where facebookid = '"+profile.id+"' OR email_address = '"+profile.email+"')  as \"exists\";";
     var query = client.query(queryString1);
 	query.on('row', function(row){
@@ -160,8 +177,8 @@ app.get("/auth/facebook", passport.authenticate("facebook", { scope : "email" })
 // handle the callback after facebook has authenticated the user
 app.get("/auth/facebook/callback",
     passport.authenticate("facebook", {
-        successRedirect : "/",
-        failureRedirect : "/"
+        successRedirect : "https://bookwork-storybook-bookstore.herokuapp.com/",
+        failureRedirect : "https://bookwork-storybook-bookstore.herokuapp.com/"
 }));
 
 
