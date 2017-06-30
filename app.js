@@ -148,6 +148,8 @@ app.get('/search', function (req, res) {
         results.push(row);
     });
 
+    
+
     query.on('end', function(){
         // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
         res.render('search', {
