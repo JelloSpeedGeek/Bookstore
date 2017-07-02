@@ -215,7 +215,27 @@ app.get("/auth/facebook/callback",
 // content page, it calls the isLoggedIn function defined above first
 // if the user is logged in, then proceed to the request handler function,
 // else the isLoggedIn will send 401 status instead
-app.get("/search", isLoggedIn, function (req, res) {
+app.get("/search",  function (req, res) {
+	var search = req.query.search;
+    var results = [];
+    var query = client.query("select * from bookinfo where bookname like '%" + search + "%' or author like '%" + search + "%' or genres like '%" + search + "%'", function(err, result){
+        if(err){
+            console.log(err);
+            res.send('Cannot get item from mens');
+            return;
+        }
+    });
+
+    query.on('row', function(row){
+        results.push(row);
+    });
+
+    query.on('end', function(){
+        // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
+        res.render('search', {
+            results: results
+        });
+    });
   res.render('search', {
   });
 });
