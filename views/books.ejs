@@ -165,14 +165,9 @@ elem.append(getAllCookies());
    	<h2>Welcome to the Books Page.</h2>
         <% for(var i = 0; i < results.length; i++) { %>
 		<li>
-			 <% if (login==true) { %>
-				<a  href="/bookinfo/<%= results[i].id %>"><%= results[i].bookname %></a>
-		<body onload = "checkifadded('<%= results[i].bookname %>')"> <a id="log"   onclick="createCookie('<%= results[i].bookname %>',<%= token %>, 1)" class="btn btn-info" role="button">Add to Cart</a> 
-		<a id="delete"  onclick="delete_cookie('<%= results[i].bookname %>')" class="btn btn-info" role="button">Remove from Cart</a>
-		</body>
-				<% } else { %>
+			
 					<a href="/bookinfo/<%= results[i].id %>"><%= results[i].bookname %></a>
-					<% } %>
+				
 			
 		</li>
 		

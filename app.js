@@ -10,6 +10,8 @@ var initializedPassport = passport.initialize();
 var passportSession = passport.session();
 var port = process.env.PORT || 8080;
 var userID;
+var userName;
+var tokenID;
 var localDBUrl = "postgres://qxztjquipmttef:ad4a32b5b1780f3a9c6140818e8862c8cefeda25c926a518d68c9d504a51ed8a@ec2-23-21-224-199.compute-1.amazonaws.com:5432/dk2rd0ji5gf1c";
 var basket = false;
 var pg = require('pg');
@@ -59,8 +61,8 @@ function findUser(id) {
 var facebookAuth = {
         'clientID'        : '1318994721499964', // facebook App ID
         'clientSecret'    : '419b5142fda611cc073f398fb03b5761', // facebook App Secret
-        'callbackURL'     : 'https://bookwork-storybook-bookstore.herokuapp.com/',
-        'profileFields': ['id', 'email', 'gender', 'link', 'locale', 'name', 'timezone', 'updated_time', 'verified'],
+        'callbackURL'     : 'http://localhost:8080/auth/facebook/callback',
+        'profileFields': ['id', 'emails', 'first_name', 'last_name', 'timezone', 'updated_time', 'verified'],
     };
 
 
@@ -88,21 +90,28 @@ passport.deserializeUser( function( obj, cb ) {
 passport.use( new passportFacebook( {
         clientID: facebookAuth.clientID,
         clientSecret: facebookAuth.clientSecret,
-        callbackURL: facebookAuth.callbackURL
+        callbackURL: facebookAuth.callbackURL,
     },
    
     function (token, refreshToken, profile, done) {
-    console.log("should be here");
     var user = findUser(profile.id);
     var exists = false;
-    userID = profile.id;
-    window.alert("How are you?");
-    var queryString1 = "select exists(select 1 from userinfo where facebookid = '"+profile.id+"' OR email_address = '"+profile.email+"')  as \"exists\";";
+    
+    var queryString1 = "select exists(select * from userinfo where facebookid = '"+profile.id+"')  as \"exists\";";
     var query = client.query(queryString1);
 	query.on('row', function(row){
 			
         if (row.exists == true) {
-        //   console.log(users);
+          
+           var queryString4 = "select * from userinfo where facebookid = '"+profile.id+"';";
+          var query4 = client.query(queryString4);
+          
+           query4.on('row', function(row){
+            console.log( row.id);
+             userID = row.id;
+             tokenID = token;
+           });
+        
         
           return done(null, profile.id);
       } else {
@@ -118,12 +127,23 @@ passport.use( new passportFacebook( {
           var names =  profile.displayName.split(" ");
           var firstname = names[0];
           var lastname = names[1];
-            var queryString2 = "insert into userinfo (firstname,lastname,password,facebookid,email_address,) values ('" + firstname+ "','" + lastname + "',' password ', '" + profile.id + "','" + profile.email + "'  );";
-  var query2 = client.query(queryString2);
+          console.log("here is the error at creation");
+            var queryString2 = "insert into userinfo (firstname,lastname,password,facebookid,username) values ('" + firstname+ "','" + lastname + "' , 1234 , '"  + profile.id + "','" + profile.id +  "');";
+          var query2 = client.query(queryString2);
 
-  query2.on('error', function(err) {
-      console.log(err);
-  });
+         query2.on('error', function(err) {
+         console.log(err);
+        });
+
+        query2.on('end', function() {
+        console.log("now we are getting his user ID");
+        var queryString3 = "select id from userinfo where facebookid = '"+profile.id+"';";
+        var query3 = client.query(queryString3);
+	    query3.on('row', function(row){
+       
+        userID = row.id;
+         });
+        });
           return done(null, profile.id);
       }
             
@@ -186,8 +206,8 @@ app.get("/auth/facebook", passport.authenticate("facebook", { scope : "email" })
 // handle the callback after facebook has authenticated the user
 app.get("/auth/facebook/callback",
     passport.authenticate("facebook", {
-        successRedirect : "https://bookwork-storybook-bookstore.herokuapp.com/",
-        failureRedirect : "https://bookwork-storybook-bookstore.herokuapp.com/"
+        successRedirect : "http://localhost:8080/",
+        failureRedirect : "http://localhost:8080/"
 }));
 
 
@@ -368,7 +388,7 @@ app.get('/logAction/:log', function(req, res){
   var itemID = log.split(";")[0];
 
 
-   var queryString2 = "insert into log (owner,item,data,transaction) values ('" + userID+ "','" + itemID + "','" + date + "','added to cart');";
+   var queryString2 = "insert into log (owner,item,data,transaction) values ('" + userID+ "','" + tokenID +  "','" + itemID + "','" + date + "','added to cart');";
   var query2 = client.query(queryString2);
 
 

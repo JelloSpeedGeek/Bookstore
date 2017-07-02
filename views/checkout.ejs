@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<head>
+    	<% include ./Layout/header.ejs %>
+	</head>
+
+	<body>
+        <script>
+
+            $( document ).ready(function() {
+
+        
+            var theCookies = document.cookie.split(';');
+            var cookies = theCookies[0].split("="); 
+            var quantity = cookies[1];
+            console.log("cokie length is " + theCookies.length);
+            var modquantiy = quantity.split(";");
+            quantiy =  parseInt(modquantiy[0]);
+            quantity = quantity - 1;
+            var servoutput = "update bookinfo set quantity= '" + quantity+ "' where bookname= '" +cookies[0] + "';"; 
+            var items = '<li>' + cookies[0] +  '</li>';
+             console.log("initial items" + items);
+             console.log("cookie" + theCookies.length);
+            for (var i = 1 ; i < theCookies.length; i++) {
+             var cookies = theCookies[i].split("="); 
+            items += '<li>' + cookies[0] +  '</li>';
+            var quantity = cookies[1];
+            var modquantiy = quantity.split(";");
+            quantiy =  parseInt(modquantiy[0]);
+            quantity = quantity - 1;
+            console.log("quantity is" + quantity);
+            servoutput += "update bookinfo set quantity= '" + quantity+ "' where bookname= '" +cookies[0] + "';"; 
+
+            console.log(items);
+               }
+
+            
+             
+
+            var $newTask = $(items);
+            $('#itemList').prepend($newTask);
+            document.getElementById('purchase').setAttribute('href', '/purchase/' + servoutput);
+            
+           
+                  
+});
+
+
+var delete_cookie = function(name) {
+	console.log("removing from basket");
+    document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+	var theCookies = document.cookie.split(';');
+	if (document.cookie.length < 1) {
+        console.log("basket is empty");
+    
+
+	}
+	
+	location.reload();
+};
+
+var deleteAllCookies = function() {
+
+        
+
+        var theCookies = document.cookie.split(';');
+
+         for (var i = 0 ; i < theCookies.length; i++) {
+          var cookies = theCookies[i].split("="); 
+          delete_cookie(cookies[0]);
+
+         }
+         console.log("cookies deleted");
+         
+}
+
+
+          
+
+        </script>
+	
+	<div class="container">
+   	<h2>Welcome to the Checkout Page.</h2>
+   <div id = "itemList">
+
+   </div>
+   <div>
+            <a id="purchase"  onclick="deleteAllCookies()"  class="btn btn-info" role="button">Purchase</a>
+           </div>
+	</div>
+
+		<footer>
+            <% include ./Layout/footer.ejs %>
+		</footer>
+	
+	</body>
+</html> 
