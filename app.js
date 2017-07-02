@@ -110,6 +110,7 @@ passport.use( new passportFacebook( {
             console.log( row.id);
              userID = row.id;
              tokenID = token;
+	     client.query("insert into loggedinfo (userid, token) values ("+userID+",'"+tokenID+"')");
            });
         
         
@@ -509,6 +510,7 @@ app.post('/userLogin', function (req, res) {
 	        var storedPassword = row.password;
 	        if(password = storedPassword){
 	            var usertoken = setToken(userid);
+		    res.locals.login = true;
 	        } else{
 	            //password is wrong
 	            //needs to throw error where to say username or password is wrong
