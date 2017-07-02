@@ -30,6 +30,7 @@
     "morgan": "^1.8.2",
     "passport": "^0.3.2",
     "passport-facebook": "^2.1.1",
-    "pg": "^6.2.3"
+    "pg": "^6.2.3",
+    "rand-token": "^0.3.0"
   }
 }

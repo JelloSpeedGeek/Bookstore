@@ -16,7 +16,7 @@ var pg = require('pg');
 var path = require('path');
 var url = require("url");
 var crypto = require("crypto");
-
+var genToken = require('rand-token');
 var bodyParser = require('body-parser');
 var databaseUrl = process.env.DATABASE_URL || localDBUrl;
 var params = url.parse(databaseUrl);
@@ -162,10 +162,11 @@ function isLogged(req, res, next) {
 }
 
 function setToken(userid){
-    crypto.randomBytes(16, function(err, buffer) {
-        var token = buffer.toString('hex');
-    });
+    var token;
+    token = genToken.generate(16);
     var queryString = "insert into loggedinfo (userid, token) values ("+userid+",'"+token+"')";
+    var query = client.query(queryString);
+    return token;
 }
 
 app.use(isLogged);
@@ -468,23 +469,26 @@ app.get('/login', function (req, res) {
     });
 });
 
-app.get('/userLogin', function (req, res) {
+app.post('/userLogin', function (req, res) {
     console.log('Start userLogin');
-    /*const {username, password} = req.body;
-    var queryString = "select exists (select true from userinfo where username = '"+username+"'";
-    //var queryString = "select * from userinfo where username='"+username+"'";
+    console.log(req.body);
+    var username = req.body.username;
+    var storedPassword = req.body.password;
+    console.log('username = ' + username);
+    //var queryString = "select exists (select true from userinfo where username = '"+username+"'";
+    var queryString = "select * from userinfo where username='"+username+"'";
     var query = client.query(queryString);
-    query.on('row', function (){
-        if(row.exists = true){
+    console.log('sent query');
+    query.on('row', function (row){
+	console.log('query returned row');
+        if(row.username = username){
             var queryString2 = "select (id, password) from userinfo where username = '"+username+"'";
             var query2 = client.query(queryString2);
             query2.on('row', function (){
 	        var userid = row.id;
 	        var storedPassword = row.password;
-	        if(password = storePassword){
-	            /*TODO: create a token, store token in loggedinfo table
-	            pass token to end user
-	            usertoken = setToken(userid);
+	        if(password = storedPassword){
+	            var usertoken = setToken(userid);
 	        } else{
 	            //password is wrong
 	            //needs to throw error where to say username or password is wrong
@@ -497,7 +501,7 @@ app.get('/userLogin', function (req, res) {
     })
     query.on('end', function () {
         res.redirect("/");
-    })*/
+    })
 });
 
 /*app.use((req,res,next) => {
