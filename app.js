@@ -15,6 +15,7 @@ var basket = false;
 var pg = require('pg');
 var path = require('path');
 var url = require("url");
+var crypto = require("crypto");
 
 var bodyParser = require('body-parser');
 var databaseUrl = process.env.DATABASE_URL || localDBUrl;
@@ -158,6 +159,13 @@ function isLogged(req, res, next) {
  
 
   return next();
+}
+
+function setToken(userid){
+    crypto.randomBytes(16, function(err, buffer) {
+        var token = buffer.toString('hex');
+    });
+    var queryString = "insert into loggedinfo (userid, token) values ("+userid+",'"+token+"')";
 }
 
 app.use(isLogged);
@@ -460,19 +468,38 @@ app.get('/login', function (req, res) {
     });
 });
 
-app.post('/userLogin', jsonParser,(req, res) => {
+app.post('/userLogin', function (req, res) {
     const {username, password} = req.body;
-    var queryString = "select * from userinfo where username='"+username+"'";
+    var queryString = "select exists (select true from userinfo where username = '"+username+"'";
+    //var queryString = "select * from userinfo where username='"+username+"'";
     var query = client.query(queryString);
     query.on('row', function (){
-        
+        if(row.exists = true){
+            var queryString2 = "select (id, password) from userinfo where username = '"+username+"'";
+            var query2 = client.query(queryString2);
+            query2.on('row', function (){
+	        var userid = row.id;
+	        var storedPassword = row.password;
+	        if(password = storePassword){
+	            /*TODO: create a token, store token in loggedinfo table
+	            pass token to end user*/
+	            usertoken = setToken(userid);
+	        } else{
+	            //password is wrong
+	            //needs to throw error where to say username or password is wrong
+	        }
+	    });
+        } else{
+	    //user does not exist
+	    //throw error saying username or password is incorrect
+        }
     })
     query.on('end', function () {
         res.redirect("/");
     })
 });
 
-app.use((req,res,next) => {
+/*app.use((req,res,next) => {
     redis.get(req.headers.Auth).then(reply => {
         if (reply) {
             User. findById(reply).then(user => {
@@ -484,7 +511,7 @@ app.use((req,res,next) => {
             throw new Error('403');
         }
     })
-});
+});*/
 /*app.post('/userLogin', function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
