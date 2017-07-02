@@ -1,11 +1,22 @@
+
 var express = require('express');
 var app = express();
+var expressSession = require( 'express-session' );
+var passport = require( 'passport' );
+var expressJWT = require('express-jwt');
+var jwt = require('jsonwebtoken');
+var passportFacebook = require( 'passport-facebook' );
+var initializedPassport = passport.initialize();
+var passportSession = passport.session();
 var port = process.env.PORT || 8080;
+var userID;
+var localDBUrl = "postgres://qxztjquipmttef:ad4a32b5b1780f3a9c6140818e8862c8cefeda25c926a518d68c9d504a51ed8a@ec2-23-21-224-199.compute-1.amazonaws.com:5432/dk2rd0ji5gf1c";
+var basket = false;
 var pg = require('pg');
 var path = require('path');
-var url = require('url');
+var url = require("url");
+
 var bodyParser = require('body-parser');
-var localDBUrl = "postgres://qxztjquipmttef:ad4a32b5b1780f3a9c6140818e8862c8cefeda25c926a518d68c9d504a51ed8a@ec2-23-21-224-199.compute-1.amazonaws.com:5432/dk2rd0ji5gf1c";
 var databaseUrl = process.env.DATABASE_URL || localDBUrl;
 var params = url.parse(databaseUrl);
 var auth = params.auth.split(':');
@@ -19,8 +30,198 @@ var config = {
     ssl: true   // NOTICE: if connecting on local db, this should be false
 };
 var client = new pg.Client(config);
-var passport = require('passport-facebook');
 client.connect();
+var session = expressSession({
+    secret: '60dd06aa-cf8e-4cf8-8925-6de720015ebf',
+    resave: false,
+    saveUninitialized: false,
+    name: 'sid'
+});
+
+// hardcoded users, ideally the users should be stored in a database
+var users = [
+{"id":111, "username":"amy", "password":"amyspassword"},
+{
+    "id" : "222",
+    "email" : "hamid.abubakr@gmail.com",
+    "name" : "Ben",
+    "token" : "DeSag3sEgaEGaYRNKlQp05@diorw"}
+];
+function findUser(id) {
+    for(var i=0; i<users.length; i++) {
+        if(id === users[i].id) {
+            return users[i]
+        }
+    }
+    return null;
+}
+var facebookAuth = {
+        'clientID'        : '1318994721499964', // facebook App ID
+        'clientSecret'    : '419b5142fda611cc073f398fb03b5761', // facebook App Secret
+        'callbackURL'     : 'https://bookwork-storybook-bookstore.herokuapp.com/',
+        'profileFields': ['id', 'email', 'gender', 'link', 'locale', 'name', 'timezone', 'updated_time', 'verified'],
+    };
+
+
+
+app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.urlencoded({
+      extended: true
+    }));
+app.use(bodyParser.json());
+app.use( session );
+app.use( initializedPassport );
+app.use( passportSession );
+
+
+passport.serializeUser( function( user, cb ) {
+    //nothing to do here as we use the username as it is
+    cb( null, user );
+} );
+
+passport.deserializeUser( function( obj, cb ) {
+    //again, we just pass the username forward
+    cb( null, obj );
+} );
+
+passport.use( new passportFacebook( {
+        clientID: facebookAuth.clientID,
+        clientSecret: facebookAuth.clientSecret,
+        callbackURL: facebookAuth.callbackURL
+    },
+   
+    function (token, refreshToken, profile, done) {
+    console.log("should be here");
+    var user = findUser(profile.id);
+    var exists = false;
+    userID = profile.id;
+    window.alert("How are you?");
+    var queryString1 = "select exists(select 1 from userinfo where facebookid = '"+profile.id+"' OR email_address = '"+profile.email+"')  as \"exists\";";
+    var query = client.query(queryString1);
+	query.on('row', function(row){
+			
+        if (row.exists == true) {
+        //   console.log(users);
+        
+          return done(null, profile.id);
+      } else {
+         var newUser = {
+              "id":       profile.id,
+              "name":     profile.name.givenName + ' ' + profile.name.familyName,
+              // "email":    (profile.emails[0].value || '').toLowerCase(),
+              "token":    token
+          };
+          users.push(newUser);
+          console.log(newUser);
+          console.log('entering new user' + profile);
+          var names =  profile.displayName.split(" ");
+          var firstname = names[0];
+          var lastname = names[1];
+            var queryString2 = "insert into userinfo (firstname,lastname,password,facebookid,email_address,) values ('" + firstname+ "','" + lastname + "',' password ', '" + profile.id + "','" + profile.email + "'  );";
+  var query2 = client.query(queryString2);
+
+  query2.on('error', function(err) {
+      console.log(err);
+  });
+          return done(null, profile.id);
+      }
+            
+	})
+
+   
+  }));
+
+// app.get( '/login/facebook', passport.authenticate('facebook') );
+//
+// app.get( '/login/facebook/return',
+//         passport.authenticate('facebook', { failureRedirect: '/login' }),
+//         ( req, res ) => {
+//                 res.redirect('/');
+// } );
+
+// route middleware to ensure user is logged in, if it's not send 401 status
+function isLoggedIn(req, res, next) {
+  res.locals.login = req.isAuthenticated();
+    console.log('status of log is ' +   res.locals.login);
+    if (req.isAuthenticated())
+        return next();
+
+    res.sendStatus(401);
+}
+
+// route middleware to ensure user is logged in, if it's not send 401 status
+function isLogged(req, res, next) {
+  res.locals.login = req.isAuthenticated();
+  res.locals.token = userID;
+  res.locals.basket = basket;
+ 
+ 
+
+  return next();
+}
+
+app.use(isLogged);
+// // home page
+// app.get("/", function (req, res) {
+//     res.send("Hello!");
+// });
+
+// login page
+app.get("/login", function (req, res) {
+    res.send("<a href='/auth/facebook'>login through facebook</a>");
+});
+
+
+// send to facebook to do the authentication
+app.get("/auth/facebook", passport.authenticate("facebook", { scope : "email" }));
+// handle the callback after facebook has authenticated the user
+app.get("/auth/facebook/callback",
+    passport.authenticate("facebook", {
+        successRedirect : "https://bookwork-storybook-bookstore.herokuapp.com/",
+        failureRedirect : "https://bookwork-storybook-bookstore.herokuapp.com/"
+}));
+
+
+// content page, it calls the isLoggedIn function defined above first
+// if the user is logged in, then proceed to the request handler function,
+// else the isLoggedIn will send 401 status instead
+app.get("/search", isLoggedIn, function (req, res) {
+  res.render('search', {
+  });
+});
+
+// logout request handler, passport attaches a logout() function to the req object,
+// and we call this to logout the user, same as destroying the data in the session.
+app.get("/logout", function(req, res) {
+    req.logout();
+    res.send("logout success!");
+});
+
+
+// // send to facebook to do the authentication
+// app.get("/auth/facebook", passport.authenticate("facebook", { scope : "email" }));
+// // handle the callback after facebook has authenticated the user
+// app.get("/auth/facebook/callback",
+//     passport.authenticate("facebook", {
+//         successRedirect : "/content",
+//         failureRedirect : "/"
+// }));
+//
+//
+// // content page, it calls the isLoggedIn function defined above first
+// // if the user is logged in, then proceed to the request handler function,
+// // else the isLoggedIn will send 401 status instead
+// app.get("/content", isLoggedIn, function (req, res) {
+//     res.send("Congratulations! you've successfully logged in.");
+// });
+//
+// // logout request handler, passport attaches a logout() function to the req object,
+// // and we call this to logout the user, same as destroying the data in the session.
+// app.get("/logout", function(req, res) {
+//     req.logout();
+//     res.send("logout success!");
+// });
+
 
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({
@@ -37,9 +238,18 @@ app.listen(port, function () {
 
 app.get('/', function (req, res) {
     res.render('index', {
-		title: "hello!"    
+		title: "hello!"
     });
+
 });
+
+app.get('/checkout', function (req, res) {
+  res.render('checkout'
+           
+        );
+
+});
+
 
 app.get('/authors', function (req, res) {
     var results = [];
@@ -51,7 +261,7 @@ app.get('/authors', function (req, res) {
         }
     });
 
-    query.on('row', function(row){
+       query.on('row', function(row){
         results.push(row);
     });
 
@@ -110,6 +320,71 @@ app.get('/bookinfo/:id', function(req, res){
         res.render('bookinformation', data);
     });
 });
+app.get('/removeItem/:false', function(req, res){
+console.log('removing the item from SERVER');
+basket = false;
+res.locals.basket = false;
+ var results = [];
+     
+    var query = client.query("SELECT id, bookname FROM bookinfo;", function(err, result){
+        if(err){
+            console.log("Error getting mens items");
+            res.send('Cannot get item from mens');
+            return;
+        }
+    });
+
+    query.on('row', function(row){
+        results.push(row);
+    });
+
+    query.on('end', function(){
+        // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
+        res.render('books', {
+            results: results
+        });
+    });
+
+});
+app.get('/logAction/:log', function(req, res){
+    var data = {};
+    var log = req.params.log;
+    //var conv = JSON.parse(log);
+
+  console.log("cookies received by server" + log.split(";")[1]);
+  //console.log("cookies received by domain" + req);
+  basket = true;
+  res.locals.basket = basket;
+  var date = log.split(";")[1];
+  var itemID = log.split(";")[0];
+
+
+   var queryString2 = "insert into log (owner,item,data,transaction) values ('" + userID+ "','" + itemID + "','" + date + "','added to cart');";
+  var query2 = client.query(queryString2);
+
+
+   var results = [];
+     
+    var query = client.query("SELECT id, bookname FROM bookinfo;", function(err, result){
+        if(err){
+            console.log("Error getting mens items");
+            res.send('Cannot get item from mens');
+            return;
+        }
+    });
+
+    query.on('row', function(row){
+        results.push(row);
+    });
+
+    query.on('end', function(){
+        // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
+        res.render('books', {
+            results: results
+        });
+    });
+
+});
 
 app.get('/genres', function (req, res) {
     var results = [];
@@ -156,6 +431,7 @@ app.get('/search', function (req, res) {
     });
 });
 
+
 app.get('/register', function (req, res) {
     res.render('register', {
     });
@@ -166,12 +442,14 @@ app.post('/register', function (req, res) {
   var lastname = req.body.lastname;
   var username = req.body.username;
   var password = req.body.password;
+
   var queryString = "insert into userinfo (firstname,lastname,username,password) values ('" + firstname + "','" + lastname + "','" + username + "','" + password + "')";
   var query = client.query(queryString);
   query.on('end', function () {
   		/*redirect is for if we want it to go back to the homepage after registering.*/
   		res.redirect("/");
   });
+
   query.on('error', function(err) {
       console.log(err);
   });
@@ -210,11 +488,13 @@ app.use((req,res,next) => {
 /*app.post('/userLogin', function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
-    var queryString = "select * from userinfo where username = '"+username+"' and password = '"+password+"';";
+   console.log("we are loggin in the user")
+    var queryString = "select * from userinfo where  id = '"+req+"';";
     var query = client.query(queryString);
 	query.on('row', function(row){
 			console.log(row);
 	})
+
     query.on('end', function () {
     	//redirect is for if we want it to go back to the homepage after registering.
     	res.redirect("/");

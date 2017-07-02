@@ -1,6 +1,161 @@
 <!DOCTYPE html>
 <html>
 	<head>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+   	<meta charset="UTF-8">
+		<title>Group Project!</title>
+
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+		<link href="css/stylesheet.css" rel="stylesheet">
+
+
+
+	<!DOCTYPE html>
+	<script>
+		
+		var createCookie = function(name, value, days) {
+			console.log("name is" + name);
+    var expires;
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toGMTString();
+    }
+    else {
+        expires = "";
+    }
+    document.cookie = name + "=" + value + expires + "; path=/";
+	
+
+// var log = new Object();
+//  log.name = name;
+//  log.date = getDate();
+
+
+
+var log = name+";"+getDate();
+console.log("cookie creatwed" + getCookie(name)[0]);
+
+	document.getElementById('log').setAttribute('href', '/logAction/' + log);
+
+// 	$.ajax({
+//   dataType: "json",
+//   method: "GET",
+//   //contentType: "application/json",
+//   url: "https://hamid-test.herokuapp.com/logAction/log",
+//   data: logJSON
+
+// });
+
+
+  
+	
+}
+
+var delete_cookie = function(name) {
+	console.log("removing from basket");
+    document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+	var theCookies = document.cookie.split(';');
+	if (document.cookie.length < 1) {
+    console.log("basket is empty");
+    document.getElementById('delete').setAttribute('href', '/removeItem/false' );
+
+	}
+	
+	location.reload();
+};
+
+function checkifadded(name) {
+console.log("i am here");
+var firstbtn = document.getElementById("log");
+var secondbtn = document.getElementById("delete");
+if (getCookie(name) == "") {
+	console.log("item not added to basket");
+$('#delete').hide();
+
+} else {
+	console.log("item added to basket");
+    $('#log').hide();
+}
+
+//firstbtn.parentNode.replaceChild(secondbtn, firstbtn);
+	
+}
+
+function getDate() {
+ var date = new Date();
+date.setTime(date.getTime());
+
+return date.toGMTString();
+
+
+}
+
+function sendLog(item) {
+
+var log = {
+   "id" : item,
+   "date" : getDate()
+
+}
+
+console.log("logging complete");
+
+return log;
+
+}
+
+function getCookie(c_name) {
+    if (document.cookie.length > 0) {
+        c_start = document.cookie.indexOf(c_name + "=");
+        if (c_start != -1) {
+            c_start = c_start + c_name.length + 1;
+            c_end = document.cookie.indexOf(";", c_start);
+            if (c_end == -1) {
+                c_end = document.cookie.length;
+            }
+            return unescape(document.cookie.substring(c_start, c_end));
+        }
+    }
+    return "";
+}
+
+
+function listCookies() {
+
+    var theCookies = document.cookie.split(';');
+    var aString = '';
+    for (var i = 0 ; i <= theCookies.length; i++) {
+        aString += theCookies[i] + ";";
+    }
+    return aString;
+}
+
+
+function makeShoppingList(){
+
+
+var elem = document.getElementById("ShoppingCart");
+    
+elem.append(getAllCookies());
+
+
+}
+
+</script>
+<html>
+	<head>
     	<% include ./Layout/header.ejs %>
 	</head>
 
@@ -9,7 +164,18 @@
 	<div class="container">
    	<h2>Welcome to the Books Page.</h2>
         <% for(var i = 0; i < results.length; i++) { %>
-		<li><a href="/bookinfo/<%= results[i].id %>"><%= results[i].bookname %></a></li>
+		<li>
+			 <% if (login==true) { %>
+				<a  href="/bookinfo/<%= results[i].id %>"><%= results[i].bookname %></a>
+		<body onload = "checkifadded('<%= results[i].bookname %>')"> <a id="log"   onclick="createCookie('<%= results[i].bookname %>',<%= token %>, 1)" class="btn btn-info" role="button">Add to Cart</a> 
+		<a id="delete"  onclick="delete_cookie('<%= results[i].bookname %>')" class="btn btn-info" role="button">Remove from Cart</a>
+		</body>
+				<% } else { %>
+					<a href="/bookinfo/<%= results[i].id %>"><%= results[i].bookname %></a>
+					<% } %>
+			
+		</li>
+		
         <% } %>
 	</div>
 
