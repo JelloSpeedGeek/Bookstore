@@ -175,9 +175,9 @@ app.use(isLogged);
 // });
 
 // login page
-app.get("/login", function (req, res) {
+/*app.get("/login", function (req, res) {
     res.send("<a href='/auth/facebook'>login through facebook</a>");
-});
+});*/
 
 
 // send to facebook to do the authentication
@@ -468,8 +468,9 @@ app.get('/login', function (req, res) {
     });
 });
 
-app.post('/userLogin', function (req, res) {
-    const {username, password} = req.body;
+app.get('/userLogin', function (req, res) {
+    console.log('Start userLogin');
+    /*const {username, password} = req.body;
     var queryString = "select exists (select true from userinfo where username = '"+username+"'";
     //var queryString = "select * from userinfo where username='"+username+"'";
     var query = client.query(queryString);
@@ -482,7 +483,7 @@ app.post('/userLogin', function (req, res) {
 	        var storedPassword = row.password;
 	        if(password = storePassword){
 	            /*TODO: create a token, store token in loggedinfo table
-	            pass token to end user*/
+	            pass token to end user
 	            usertoken = setToken(userid);
 	        } else{
 	            //password is wrong
@@ -496,7 +497,7 @@ app.post('/userLogin', function (req, res) {
     })
     query.on('end', function () {
         res.redirect("/");
-    })
+    })*/
 });
 
 /*app.use((req,res,next) => {
