@@ -221,7 +221,7 @@ app.get("/search",  function (req, res) {
     var query = client.query("select * from bookinfo where bookname like '%" + search + "%' or author like '%" + search + "%' or genres like '%" + search + "%'", function(err, result){
         if(err){
             console.log(err);
-            res.send('Cannot get item from mens');
+            res.send('Cannot find book');
             return;
         }
     });
@@ -236,8 +236,6 @@ app.get("/search",  function (req, res) {
             results: results
         });
     });
-  res.render('search', {
-  });
 });
 
 // logout request handler, passport attaches a logout() function to the req object,
