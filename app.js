@@ -165,6 +165,9 @@ function setToken(userid){
     return token;
 }
 
+
+
+
 app.use(isLogged);
 // // home page
 // app.get("/", function (req, res) {
@@ -214,8 +217,9 @@ app.get("/search",  function (req, res) {
 // logout request handler, passport attaches a logout() function to the req object,
 // and we call this to logout the user, same as destroying the data in the session.
 app.get("/logout", function(req, res) {
-    req.logout();
+    req.logOut();
     res.send("logout success!");
+    req.session.destroy();
 });
 
 // // send to facebook to do the authentication
