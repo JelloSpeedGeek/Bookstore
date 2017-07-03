@@ -303,8 +303,8 @@ app.get('/authors', function (req, res) {
     var results = [];
     var query = client.query("SELECT id, author FROM bookinfo;", function(err, result){
         if(err){
-            console.log("Error getting mens items");
-            res.send('Cannot get item from mens');
+            console.log("Error cannot get Authors from Database");
+            res.send('Error cannot get Authors from Database');
             return;
         }
     });
@@ -325,8 +325,8 @@ app.get('/books', function (req, res) {
     var results = [];
     var query = client.query("SELECT id, bookname FROM bookinfo;", function(err, result){
         if(err){
-            console.log("Error getting mens items");
-            res.send('Cannot get item from mens');
+            console.log("Error cannot get Booknames from Database");
+            res.send('Error cannot get Booknames from Database');
             return;
         }
     });
@@ -348,8 +348,8 @@ app.get('/bookinfo/:id', function(req, res){
     var id = req.params.id;
     var query = client.query("SELECT * FROM bookinfo where id=$1;", [id], function(err, result){
         if(err){
-            console.log("Error getting mens items");
-            res.send('Cannot get item from mens');
+            console.log("Error cannot get Book Information from Database");
+            res.send('Error cannot get Book Information from Database');
             return;
         }
     });
@@ -376,8 +376,8 @@ res.locals.basket = false;
      
     var query = client.query("SELECT id, bookname FROM bookinfo;", function(err, result){
         if(err){
-            console.log("Error getting mens items");
-            res.send('Cannot get item from mens');
+            console.log("Error cannot get Bookname from Database");
+            res.send('Error cannot get Bookname from Database');
             return;
         }
     });
@@ -415,8 +415,8 @@ app.get('/logAction/:log', function(req, res){
      
     var query = client.query("SELECT id, bookname FROM bookinfo;", function(err, result){
         if(err){
-            console.log("Error getting mens items");
-            res.send('Cannot get item from mens');
+            console.log("Error cannot get Bookname from Database");
+            res.send('Error cannot get Bookname from Database');
             return;
         }
     });
@@ -438,8 +438,8 @@ app.get('/genres', function (req, res) {
     var results = [];
     var query = client.query("SELECT id, genres FROM bookinfo;", function(err, result){
         if(err){
-            console.log("Error getting mens items");
-            res.send('Cannot get item from mens');
+            console.log("Error cannot get Genres from Database");
+            res.send('Error cannot get Genres from Database');
             return;
         }
     });
@@ -462,7 +462,7 @@ app.get('/search', function (req, res) {
     var query = client.query("select * from bookinfo where bookname like '%" + search + "%' or author like '%" + search + "%' or genres like '%" + search + "%'", function(err, result){
         if(err){
             console.log(err);
-            res.send('Cannot get item from mens');
+            res.send('Cannot find keyword for Search within Database');
             return;
         }
     });
