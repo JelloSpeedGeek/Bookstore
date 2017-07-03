@@ -221,6 +221,7 @@ app.get("/search",  function (req, res) {
 // and we call this to logout the user, same as destroying the data in the session.
 app.get("/logout", function(req, res) {
     req.logout();
+    req.session.user = null;
     res.send("logout success!");
 });
 
