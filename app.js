@@ -365,9 +365,8 @@ app.get('/bookinfo/:id', function(req, res){
 
     query.on('end', function(){
         // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
-        res.render('bookinformation', data, {
-	    user: req.session.user
-	});
+        data.user = req.session.user;
+        res.render('bookinformation', data);
     });
 });
 app.get('/removeItem/:name', function(req, res){
