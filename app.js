@@ -407,7 +407,7 @@ app.get('/logAction/:log', function(req, res){
   var itemID = log.split(";")[0];
 
 
-   var queryString2 = "insert into log (owner,item,data,transaction) values ('" + userID+ "','" + tokenID +  "','" + itemID + "','" + date + "','added to cart');";
+   var queryString2 = "insert into log (userid,tokenid,itemid,date) values ('" + userID+ "','" + tokenID +  "','" + itemID + "','" + date + "','added to cart');";
   var query2 = client.query(queryString2);
 
 
