@@ -493,6 +493,17 @@ app.get('/purchase/:servoutput', function (req, res) {
    console.log("received checkout from:" + log);
    var queryString2 = log;
   var query2 = client.query(queryString2);
+
+  query2.on('end', function(){
+        // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
+       var items = queryString2.split(";");
+       for (var i = 0;i < items.length; i++ ) {
+        var itemname = items[i].split("bookname= ").pop();
+        var fix = itemname.split(";").pop();
+        itemname = fix;
+        console.log("purchaes bookname is " + itemname);
+       }
+    });
  
   var results = [];
     var query = client.query("SELECT id, bookname, quantity FROM bookinfo;", function(err, result){
