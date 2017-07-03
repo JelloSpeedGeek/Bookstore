@@ -30,10 +30,11 @@
             quantiy =  parseInt(modquantiy[0]);
             quantity = quantity - 1;
             console.log("quantity is" + quantity);
-            servoutput += "update bookinfo set quantity= '" + quantity+ "' where bookname= '" +cookies[0] + "';"; 
+            servoutput += "update bookinfo set quantity= '" + quantity+ "' where bookname= '" +cookies[0].trim() + "';"; 
 
             console.log(items);
                }
+            
 
             
              
@@ -45,6 +46,7 @@
            
                   
 });
+
 
 
 var delete_cookie = function(name) {
