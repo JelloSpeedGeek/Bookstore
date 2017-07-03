@@ -9,7 +9,7 @@
 	<div class="container">
    	<h2>Welcome to the Authors Page.</h2>
         <% for(var i = 0; i < results.length; i++) { %>
-		<li><%= results[i].author %></li>
+		<li><a href="/bookinfo/<%= results[i].id %>"><%= results[i].author %></a></li>
         <% } %>
 	</div>
 

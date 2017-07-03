@@ -9,7 +9,7 @@
 	<div class="container">
 		<h2>Welcome to the Genres Page</h2>
         <% for(var i = 0; i < results.length; i++) { %>
-		<li><%= results[i].genres %></li>
+		<li><a href="/bookinfo/<%= results[i].id %>"><%= results[i].genres %></a></li>
         <% } %>
 	</div>
 
