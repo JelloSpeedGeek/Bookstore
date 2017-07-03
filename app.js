@@ -154,14 +154,7 @@ function isLogged(req, res, next) {
   res.locals.login = req.isAuthenticated();
   res.locals.token = userID;
   res.locals.basket = basket;
- 
- 
-
   return next();
-}
-
-function something(req, res, next) {
-    req.locals.user = user;
 }
 
 function setToken(userid){
@@ -553,12 +546,12 @@ app.post('/userLogin', function (req, res) {
 	        var userid = row.id;
 	        var storedPassword = row.password;
 	        if(password = storedPassword){
-	            var usertoken = setToken(userid);
-		    //res.locals.login = true;
-		    //req.session.user = user;
+	            var usertoken = setToken(userid)
+		      req.session.user = row;
 	        } else{
 	            //password is wrong
 	            //needs to throw error where to say username or password is wrong
+		    res.redirect("/");
 	        }
 	    });
         } else{
