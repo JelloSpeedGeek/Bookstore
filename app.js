@@ -473,7 +473,7 @@ app.get('/search', function (req, res) {
     query.on('row', function(row){
         results.push(row);
     });
-
+    
     query.on('end', function(){
         // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
         res.render('search', {
@@ -482,10 +482,20 @@ app.get('/search', function (req, res) {
     });
 });
 
+function getDate() {
+ var date = new Date();
+date.setTime(date.getTime());
+
+return date.toGMTString();
+
+
+}
+
 app.get('/purchase/:servoutput', function (req, res) {
     var log = req.params.servoutput;
     //var conv = JSON.parse(log);
     basket = false;
+    var date = getDate();   
     res.locals.basket = basket;
 
  
