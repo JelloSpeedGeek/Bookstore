@@ -165,6 +165,10 @@ function isLogged(req, res, next) {
 }
 
 
+function something(req, res, next) {
+    req.locals.user = user;
+}
+
 
 
 function setToken(userid){
