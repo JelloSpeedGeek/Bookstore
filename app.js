@@ -182,6 +182,9 @@ function isLogged(req, res, next) {
   return next();
 }
 
+
+
+
 function setToken(userid){
     var token;
     token = genToken.generate(16);
@@ -407,7 +410,7 @@ app.get('/logAction/:log', function(req, res){
   var itemID = log.split(";")[0];
 
 
-	var queryString2 = "insert into log (userid,tokenid,itemid,date) values ('" + userID+ "','" + tokenID +  "','" + itemID + "','" + date + "','added to cart');";
+	var queryString2 = "insert into log (userid,tokenid,itemid,date,description) values ('" + userID+ "','" + tokenID +  "','" + itemID + "','" + date + "','added to cart');";
   var query2 = client.query(queryString2);
 
 
@@ -479,11 +482,37 @@ app.get('/search', function (req, res) {
     });
 });
 
-app.get('/purchase:count', function (req, res) {
-   var query = client.query(count);
-   query.on('end', function(){
-       console.log('items count has been updated');
-   }
+app.get('/purchase/:servoutput', function (req, res) {
+    var log = req.params.servoutput;
+    //var conv = JSON.parse(log);
+    basket = false;
+    res.locals.basket = basket;
+
+ 
+   console.log("received checkout from:" + log);
+   var queryString2 = log;
+  var query2 = client.query(queryString2);
+ 
+  var results = [];
+    var query = client.query("SELECT id, bookname, quantity FROM bookinfo;", function(err, result){
+        if(err){
+            console.log("Error getting mens items");
+            res.send('Cannot get item from mens');
+            return;
+        }
+    });
+
+    query.on('row', function(row){
+        results.push(row);
+    });
+
+    query.on('end', function(){
+        // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
+        res.render('books', {
+            results: results
+        });
+    });
+
 });
 
 
