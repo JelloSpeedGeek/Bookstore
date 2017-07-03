@@ -1,4 +1,3 @@
-
 var express = require('express');
 var app = express();
 var expressSession = require( 'express-session' );
@@ -48,8 +47,6 @@ var facebookAuth = {
         'profileFields': ['id', 'emails', 'first_name', 'last_name', 'timezone', 'updated_time', 'verified'],
     };
 
-
-
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({
       extended: true
@@ -58,7 +55,6 @@ app.use(bodyParser.json());
 app.use( session );
 app.use( initializedPassport );
 app.use( passportSession );
-
 
 passport.serializeUser( function( user, cb ) {
     //nothing to do here as we use the username as it is
@@ -164,12 +160,9 @@ function isLogged(req, res, next) {
   return next();
 }
 
-
 function something(req, res, next) {
     req.locals.user = user;
 }
-
-
 
 function setToken(userid){
     var token;
@@ -190,7 +183,6 @@ app.use(isLogged);
     res.send("<a href='/auth/facebook'>login through facebook</a>");
 });*/
 
-
 // send to facebook to do the authentication
 app.get("/auth/facebook", passport.authenticate("facebook", { scope : "email" }));
 // handle the callback after facebook has authenticated the user
@@ -199,7 +191,6 @@ app.get("/auth/facebook/callback",
         successRedirect : "http://localhost:8080/",
         failureRedirect : "http://localhost:8080/"
 }));
-
 
 // content page, it calls the isLoggedIn function defined above first
 // if the user is logged in, then proceed to the request handler function,
@@ -234,7 +225,6 @@ app.get("/logout", function(req, res) {
     res.send("logout success!");
 });
 
-
 // // send to facebook to do the authentication
 // app.get("/auth/facebook", passport.authenticate("facebook", { scope : "email" }));
 // // handle the callback after facebook has authenticated the user
@@ -259,7 +249,6 @@ app.get("/logout", function(req, res) {
 //     res.send("logout success!");
 // });
 
-
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({
   extended: true
@@ -275,18 +264,14 @@ app.listen(port, function () {
 
 app.get('/', function (req, res) {
     res.render('index', {
-		title: "hello!"
+	title: "hello!"
     });
 
 });
 
 app.get('/checkout', function (req, res) {
-  res.render('checkout'
-           
-        );
-
+  res.render('checkout');
 });
-
 
 app.get('/authors', function (req, res) {
     var results = [];
@@ -395,10 +380,8 @@ app.get('/logAction/:log', function(req, res){
   var date = log.split(";")[1];
   var itemID = log.split(";")[0];
 
-
 	var queryString2 = "insert into log (userid,tokenid,itemid,date,description) values ('" + userID+ "','" + tokenID +  "','" + itemID + "','" + date + "','added to cart');";
   var query2 = client.query(queryString2);
-
 
    var results = [];
      
@@ -572,7 +555,7 @@ app.post('/userLogin', function (req, res) {
 	        if(password = storedPassword){
 	            var usertoken = setToken(userid);
 		    //res.locals.login = true;
-		    //req.session.user = 
+		    //req.session.user = user;
 	        } else{
 	            //password is wrong
 	            //needs to throw error where to say username or password is wrong
@@ -600,22 +583,4 @@ app.post('/userLogin', function (req, res) {
             throw new Error('403');
         }
     })
-});*/
-/*app.post('/userLogin', function (req, res) {
-    var username = req.body.username;
-    var password = req.body.password;
-   console.log("we are loggin in the user")
-    var queryString = "select * from userinfo where  id = '"+req+"';";
-    var query = client.query(queryString);
-	query.on('row', function(row){
-			console.log(row);
-	})
-
-    query.on('end', function () {
-    	//redirect is for if we want it to go back to the homepage after registering.
-    	res.redirect("/");
-    })
-    query.on('error', function(err) {
-        console.log(err);
-    });
 });*/
