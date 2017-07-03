@@ -543,35 +543,3 @@ app.post('/userLogin', function (req, res) {
         res.redirect("/");
     })
 });
-
-/*app.use((req,res,next) => {
-    redis.get(req.headers.Auth).then(reply => {
-        if (reply) {
-            User. findById(reply).then(user => {
-                req.user = user;
-                next();
-            });
-        }
-        else {
-            throw new Error('403');
-        }
-    })
-});*/
-/*app.post('/userLogin', function (req, res) {
-    var username = req.body.username;
-    var password = req.body.password;
-   console.log("we are loggin in the user")
-    var queryString = "select * from userinfo where  id = '"+req+"';";
-    var query = client.query(queryString);
-	query.on('row', function(row){
-			console.log(row);
-	})
-
-    query.on('end', function () {
-    	//redirect is for if we want it to go back to the homepage after registering.
-    	res.redirect("/");
-    })
-    query.on('error', function(err) {
-        console.log(err);
-    });
-});*/
