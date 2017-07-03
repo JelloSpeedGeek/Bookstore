@@ -216,6 +216,30 @@ app.get("/search",  function (req, res) {
     });
 });
 
+app.get("/history",  function (req, res) {
+	
+    var results = [];
+    var query = client.query("select * from log where userid = '"+userID+"';", function(err, result){
+        if(err){
+            console.log(err);
+            res.send('Cannot find log for user');
+            return;
+        }
+    });
+
+    query.on('row', function(row){
+        console.log("loc item is" + row.itemid)
+        results.push(row);
+    });
+
+    query.on('end', function(){
+        // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
+        res.render('history', {
+            results: results
+        });
+    });
+});
+
 // logout request handler, passport attaches a logout() function to the req object,
 // and we call this to logout the user, same as destroying the data in the session.
 app.get("/logout", function(req, res) {
