@@ -407,7 +407,7 @@ app.get('/logAction/:log', function(req, res){
   var itemID = log.split(";")[0];
 
 
-   var queryString2 = "insert into log (owner,item,data,transaction) values ('" + userID+ "','" + tokenID +  "','" + itemID + "','" + date + "','added to cart');";
+	var queryString2 = "insert into log (userid,tokenid,itemid,date) values ('" + userID+ "','" + tokenID +  "','" + itemID + "','" + date + "','added to cart');";
   var query2 = client.query(queryString2);
 
 
@@ -477,6 +477,13 @@ app.get('/search', function (req, res) {
             results: results
         });
     });
+});
+
+app.get('/purchase:count', function (req, res) {
+   var query = client.query(count);
+   query.on('end', function(){
+       console.log('items count has been updated');
+   }
 });
 
 
