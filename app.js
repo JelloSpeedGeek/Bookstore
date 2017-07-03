@@ -41,15 +41,6 @@ var session = expressSession({
     name: 'sid'
 });
 
-// hardcoded users, ideally the users should be stored in a database
-var users = [
-{"id":111, "username":"amy", "password":"amyspassword"},
-{
-    "id" : "222",
-    "email" : "hamid.abubakr@gmail.com",
-    "name" : "Ben",
-    "token" : "DeSag3sEgaEGaYRNKlQp05@diorw"}
-];
 function findUser(id) {
     for(var i=0; i<users.length; i++) {
         if(id === users[i].id) {
