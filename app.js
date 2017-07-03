@@ -205,7 +205,7 @@ app.get("/auth/facebook/callback",
 // content page, it calls the isLoggedIn function defined above first
 // if the user is logged in, then proceed to the request handler function,
 // else the isLoggedIn will send 401 status instead
-app.get("/search", isLoggedIn, function (req, res) {
+app.get("/search", function (req, res) {
   res.render('search', {
   });
 });
