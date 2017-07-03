@@ -43,7 +43,7 @@ var session = expressSession({
 var facebookAuth = {
         'clientID'        : '1318994721499964', // facebook App ID
         'clientSecret'    : '419b5142fda611cc073f398fb03b5761', // facebook App Secret
-        'callbackURL'     : 'http://localhost:8080/auth/facebook/callback',
+        'callbackURL'     : 'https://bookwork-storybook-bookstore.herokuapp.com/auth/facebook/callback',
         'profileFields': ['id', 'emails', 'first_name', 'last_name', 'timezone', 'updated_time', 'verified'],
     };
 
@@ -181,8 +181,8 @@ app.get("/auth/facebook", passport.authenticate("facebook", { scope : "email" })
 // handle the callback after facebook has authenticated the user
 app.get("/auth/facebook/callback",
     passport.authenticate("facebook", {
-        successRedirect : "http://localhost:8080/",
-        failureRedirect : "http://localhost:8080/"
+        successRedirect : "https://bookwork-storybook-bookstore.herokuapp.com/",
+        failureRedirect : "https://bookwork-storybook-bookstore.herokuapp.com/"
 }));
 
 // content page, it calls the isLoggedIn function defined above first
