@@ -353,11 +353,26 @@ app.get('/bookinfo/:id', function(req, res){
         res.render('bookinformation', data);
     });
 });
-app.get('/removeItem/:false', function(req, res){
+app.get('/removeItem/:name', function(req, res){
 console.log('removing the item from SERVER');
-basket = false;
-res.locals.basket = false;
+
+var product = req.params.name;
+var bookname = product.split(";")[0];
+var status = product.split(";")[1];
+console.log("bookname is" + bookname + " and status is" + status);
+
+if (status == "true") {
+basket = true;
+}
+else {
+    basket = false;
+}
+res.locals.basket = basket;
  var results = [];
+ var date = getDate();
+   
+  var queryString2 = "insert into log (userid,tokenid,itemid,date,description) values ('" + userID+ "','" + tokenID +  "','" + bookname + "','" + date + "','removed from cart');";
+  var query2 = client.query(queryString2);
      
     var query = client.query("SELECT id, bookname FROM bookinfo;", function(err, result){
         if(err){
@@ -482,18 +497,24 @@ app.get('/purchase/:servoutput', function (req, res) {
 
  
    console.log("received checkout from:" + log);
-   var queryString2 = log;
-  var query2 = client.query(queryString2);
-
+  var query2 = client.query(log);
   query2.on('end', function(){
         // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
-       var items = queryString2.split(";");
-       for (var i = 0;i < items.length; i++ ) {
+       var items = log.split(";");
+       var booknames = [];
+       for (var i = 0;i < items.length-1; i++ ) {
         var itemname = items[i].split("bookname= ").pop();
         var fix = itemname.split(";").pop();
         itemname = fix;
-        console.log("purchaes bookname is " + itemname);
+        booknames.push(itemname);      
        }
+        console.log("length of purchases is" + booknames.length);
+        var outstring = "insert into log (userid,tokenid,itemid,date,description) values ('" + userID+ "','" + tokenID +  "'," + booknames[0].trim() + ",'" + date + "','item purchased');";
+        for (var i = 1;i < booknames.length; i++ ) {
+        outstring += "insert into log (userid,tokenid,itemid,date,description) values ('" + userID+ "','" + tokenID +  "'," + booknames[i].trim() + ",'" + date + "','item purchased');";
+        }
+       console.log(outstring);
+      var query3 = client.query(outstring);
     });
  
   var results = [];
