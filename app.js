@@ -22,6 +22,7 @@ var bodyParser = require('body-parser');
 var databaseUrl = process.env.DATABASE_URL || localDBUrl;
 var params = url.parse(databaseUrl);
 var auth = params.auth.split(':');
+var user;
 
 var config = {
     user: auth[0],
@@ -131,6 +132,11 @@ passport.use( new passportFacebook( {
    
   }));
 
+app.use(function (req, res, next) {
+  res.locals.user = req.session.user;
+  next();
+});
+
 // app.get( '/login/facebook', passport.authenticate('facebook') );
 //
 // app.get( '/login/facebook/return',
@@ -141,9 +147,8 @@ passport.use( new passportFacebook( {
 
 // route middleware to ensure user is logged in, if it's not send 401 status
 function isLoggedIn(req, res, next) {
-  res.locals.login = req.isAuthenticated();
-    console.log('status of log is ' +   res.locals.login);
-    if (req.isAuthenticated())
+    res.locals.login = req.isAuthenticated();// || res.locals.user != null;
+    if (req.isAuthenticated()|| req.locals.user!=null)
         return next();
 
     res.sendStatus(401);
@@ -151,7 +156,7 @@ function isLoggedIn(req, res, next) {
 
 // route middleware to ensure user is logged in, if it's not send 401 status
 function isLogged(req, res, next) {
-  res.locals.login = req.isAuthenticated();
+  res.locals.login = req.isAuthenticated() || res.locals.user != null;
   res.locals.token = userID;
   res.locals.basket = basket;
   return next();
@@ -164,9 +169,6 @@ function setToken(userid){
     var query = client.query(queryString);
     return token;
 }
-
-
-
 
 app.use(isLogged);
 // // home page
@@ -209,7 +211,7 @@ app.get("/search",  function (req, res) {
     query.on('end', function(){
         // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
         res.render('search', {
-            results: results
+		results: results, user: req.session.user
         });
     });
 });
@@ -218,8 +220,8 @@ app.get("/search",  function (req, res) {
 // and we call this to logout the user, same as destroying the data in the session.
 app.get("/logout", function(req, res) {
     req.logout();
-    //req.session.destroy();
-    res.send("logout success!");
+    req.session.user = null;
+    res.redirect("/");
 
 });
 
@@ -262,13 +264,15 @@ app.listen(port, function () {
 
 app.get('/', function (req, res) {
     res.render('index', {
-	title: "hello!"
+	title: "hello!", user: req.session.user
     });
 
 });
 
 app.get('/checkout', function (req, res) {
-  res.render('checkout');
+  res.render('checkout', {
+      user: req.session.user
+  });
 });
 
 app.get('/authors', function (req, res) {
@@ -288,7 +292,7 @@ app.get('/authors', function (req, res) {
     query.on('end', function(){
         // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
         res.render('authors', {
-            results: results
+            results: results, user: req.session.user
         });
     });
 });
@@ -310,7 +314,7 @@ app.get('/books', function (req, res) {
     query.on('end', function(){
         // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
         res.render('books', {
-            results: results
+            results: results, user: req.session.user
         });
     });
 });
@@ -337,7 +341,9 @@ app.get('/bookinfo/:id', function(req, res){
 
     query.on('end', function(){
         // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
-        res.render('bookinformation', data);
+        res.render('bookinformation', data, {
+	    user: req.session.user
+	});
     });
 });
 app.get('/removeItem/:name', function(req, res){
@@ -376,7 +382,7 @@ res.locals.basket = basket;
     query.on('end', function(){
         // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
         res.render('books', {
-            results: results
+            results: results, user: req.session.user
         });
     });
 
@@ -412,7 +418,7 @@ app.get('/logAction/:log', function(req, res){
     query.on('end', function(){
         // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
         res.render('books', {
-            results: results
+            results: results, user: req.session.user
         });
     });
 
@@ -435,7 +441,7 @@ app.get('/genres', function (req, res) {
     query.on('end', function(){
         // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
         res.render('genres', {
-            results: results
+            results: results, user: req.session.user
         });
     });
 });
@@ -458,7 +464,7 @@ app.get('/search', function (req, res) {
     query.on('end', function(){
         // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
         res.render('search', {
-            results: results
+            results: results,  user: req.session.user
         });
     });
 });
@@ -517,7 +523,7 @@ app.get('/purchase/:servoutput', function (req, res) {
     query.on('end', function(){
         // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
         res.render('books', {
-            results: results
+            results: results, user: req.session.user
         });
     });
 
@@ -527,6 +533,7 @@ app.get('/purchase/:servoutput', function (req, res) {
 
 app.get('/register', function (req, res) {
     res.render('register', {
+        user: req.session.user
     });
 });
 
@@ -550,42 +557,28 @@ app.post('/register', function (req, res) {
 
 app.get('/login', function (req, res) {
     res.render('login', {
+        user: req.session.user
     });
 });
 
 app.post('/userLogin', function (req, res) {
-    console.log('Start userLogin');
-    console.log(req.body);
     var username = req.body.username;
-    var storedPassword = req.body.password;
-    console.log('username = ' + username);
+    var password = req.body.password;
     //var queryString = "select exists (select true from userinfo where username = '"+username+"'";
     var queryString = "select * from userinfo where username='"+username+"'";
     var query = client.query(queryString);
-    console.log('sent query');
     query.on('row', function (row){
-	console.log('query returned row');
-        if(row.username = username){
-            var queryString2 = "select (id, password) from userinfo where username = '"+username+"'";
-            var query2 = client.query(queryString2);
-            query2.on('row', function (){
-	        var userid = row.id;
-	        var storedPassword = row.password;
-	        if(password = storedPassword){
-	            var usertoken = setToken(userid)
-		      req.session.user = row;
-	        } else{
-	            //password is wrong
-	            //needs to throw error where to say username or password is wrong
-		    res.redirect("/");
-	        }
-	    });
-        } else{
-	    //user does not exist
-	    //throw error saying username or password is incorrect
+	var rowUsername = row.username;
+	var rowPassword = row.password;
+	if(rowUsername == username && rowPassword == password){
+	    var userid = row.id;
+	    var usertoken = setToken(userid)
+            req.session.user = row;
         }
+	res.redirect("/");
+
     })
-    query.on('end', function () {
+    /*query.on('end', function () {
         res.redirect("/");
-    })
+    })*/
 });
