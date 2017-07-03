@@ -41,14 +41,6 @@ var session = expressSession({
     name: 'sid'
 });
 
-function findUser(id) {
-    for(var i=0; i<users.length; i++) {
-        if(id === users[i].id) {
-            return users[i]
-        }
-    }
-    return null;
-}
 var facebookAuth = {
         'clientID'        : '1318994721499964', // facebook App ID
         'clientSecret'    : '419b5142fda611cc073f398fb03b5761', // facebook App Secret
@@ -85,7 +77,6 @@ passport.use( new passportFacebook( {
     },
    
     function (token, refreshToken, profile, done) {
-    var user = findUser(profile.id);
     var exists = false;
     
     var queryString1 = "select exists(select * from userinfo where facebookid = '"+profile.id+"')  as \"exists\";";
@@ -576,7 +567,8 @@ app.post('/userLogin', function (req, res) {
 	        var storedPassword = row.password;
 	        if(password = storedPassword){
 	            var usertoken = setToken(userid);
-		    res.locals.login = true;
+		    //res.locals.login = true;
+		    //req.session.user = 
 	        } else{
 	            //password is wrong
 	            //needs to throw error where to say username or password is wrong
