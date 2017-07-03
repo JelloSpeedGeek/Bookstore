@@ -222,7 +222,7 @@ app.get("/search",  function (req, res) {
 app.get("/logout", function(req, res) {
     req.logout();
     req.session.user = null;
-    res.send("logout success!");
+    res.redirect("/");
 });
 
 // // send to facebook to do the authentication
@@ -563,31 +563,20 @@ app.get('/login', function (req, res) {
 
 app.post('/userLogin', function (req, res) {
     var username = req.body.username;
-    var storedPassword = req.body.password;
+    var password = req.body.password;
     //var queryString = "select exists (select true from userinfo where username = '"+username+"'";
     var queryString = "select * from userinfo where username='"+username+"'";
     var query = client.query(queryString);
     query.on('row', function (row){
-        if(row.username = username){
-            var queryString2 = "select * from userinfo where username = '"+username+"'";
-            var query2 = client.query(queryString2);
-            query2.on('row', function (){
-	        var userid = row.id;
-	        var storedPassword = row.password;
-	        if(password = storedPassword){
-	            var usertoken = setToken(userid)
-		      	req.session.user = row;
-			res.redirect("/");
-	        } else{
-	            //password is wrong
-	            //needs to throw error where to say username or password is wrong
-		    res.redirect("/");
-	        }
-	    });
-        } else{
-	    //user does not exist
-	    //throw error saying username or password is incorrect
+	var rowUsername = row.username;
+	var rowPassword = row.password;
+	if(rowUsername == username && rowPassword == password){
+	    var userid = row.id;
+	    var usertoken = setToken(userid)
+            req.session.user = row;
         }
+	res.redirect("/");
+
     })
     /*query.on('end', function () {
         res.redirect("/");
