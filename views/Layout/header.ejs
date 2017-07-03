@@ -24,6 +24,7 @@
                 <a href="/checkout" class="btn btn-info" role="button">Checkout</a>
                 <% } else { %>
                 <a href="/logout" class="btn btn-info" role="button">Logout</a>
+                
                 <% } %>
 				<% } else { %>
                  <a href="/register" class="btn btn-info" role="button">Register</a>
@@ -31,10 +32,18 @@
 					<% } %>
     </div>
     <div  class="button-strip">
+        <% if (login==true) { %>
         <a href="/" class="btn btn-info" role="button">Home</a>
         <a href="/authors" class="btn btn-info" role="button">Authors</a>
         <a href="/books" class="btn btn-info" role="button">Books</a>
         <a href="/genres" class="btn btn-info" role="button">Genres</a>
+        <a href="/history" class="btn btn-info" role="button">History</a>
+        <% } else { %>
+         <a href="/" class="btn btn-info" role="button">Home</a>
+        <a href="/authors" class="btn btn-info" role="button">Authors</a>
+        <a href="/books" class="btn btn-info" role="button">Books</a>
+        <a href="/genres" class="btn btn-info" role="button">Genres</a>
+        <% } %>
     </div>
 
 </header>
