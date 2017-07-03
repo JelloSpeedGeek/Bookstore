@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<head>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+   	<meta charset="UTF-8">
+		<title>Group Project!</title>
+
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+		<link href="css/stylesheet.css" rel="stylesheet">
+
+
+
+	<!DOCTYPE html>
+
+<html>
+	<head>
+    	<% include ./Layout/header.ejs %>
+	</head>
+
+	<body>
+	
+	<div class="container">
+   	<h2>Welcome to the History Log Page.</h2>
+	 <table style="width:100%">
+	   <tr>
+    <th>Item Name</th>
+    <th>Date</th> 
+    <th>Description</th>
+  </tr>
+        <% for(var i = 0; i < results.length; i++) { %>
+		
+			
+				<tr>
+    <td><%= results[i].itemid   %></td>
+    <td><%= results[i].date   %>Smith</td> 
+    <td> <%= results[i].description   %></td>
+  </tr>
+ 
+
+					
+  
+  
+
+				
+			
+		
+		
+        <% } %>
+		</table>
+	</div>
+
+		<footer>
+            <% include ./Layout/footer.ejs %>
+		</footer>
+	
+	</body>
+</html> 

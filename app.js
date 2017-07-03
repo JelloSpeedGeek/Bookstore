@@ -595,8 +595,9 @@ app.post('/userLogin', function (req, res) {
 	var rowUsername = row.username;
 	var rowPassword = row.password;
 	if(rowUsername == username && rowPassword == password){
-	    var userid = row.id;
-	    var usertoken = setToken(userid)
+	    var id = row.id;
+	    userID = id;
+        var usertoken = setToken(id)
             req.session.user = row;
         }
 	res.redirect("/");
