@@ -43,7 +43,7 @@ var session = expressSession({
 var facebookAuth = {
         'clientID'        : '1318994721499964', // facebook App ID
         'clientSecret'    : '419b5142fda611cc073f398fb03b5761', // facebook App Secret
-        'callbackURL'     : 'https://bookwork-storybook-bookstore.herokuapp.com/auth/facebook/callback',
+        'callbackURL'     : 'http://localhost:8080/auth/facebook/callback',
         'profileFields': ['id', 'emails', 'first_name', 'last_name', 'timezone', 'updated_time', 'verified'],
     };
 
@@ -181,8 +181,8 @@ app.get("/auth/facebook", passport.authenticate("facebook", { scope : "email" })
 // handle the callback after facebook has authenticated the user
 app.get("/auth/facebook/callback",
     passport.authenticate("facebook", {
-        successRedirect : "https://bookwork-storybook-bookstore.herokuapp.com/",
-        failureRedirect : "https://bookwork-storybook-bookstore.herokuapp.com/"
+        successRedirect : "http://localhost:8080/",
+        failureRedirect : "http://localhost:8080/"
 }));
 
 // content page, it calls the isLoggedIn function defined above first
@@ -206,6 +206,30 @@ app.get("/search",  function (req, res) {
     query.on('end', function(){
         // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
         res.render('search', {
+            results: results
+        });
+    });
+});
+
+app.get("/history",  function (req, res) {
+	
+    var results = [];
+    var query = client.query("select * from log where userid = '"+userID+"';", function(err, result){
+        if(err){
+            console.log(err);
+            res.send('Cannot find log for user');
+            return;
+        }
+    });
+
+    query.on('row', function(row){
+        console.log("loc item is" + row.itemid)
+        results.push(row);
+    });
+
+    query.on('end', function(){
+        // res.setHeader('Cache-Control','public, max-age= '+ configTime.milliseconds.day*3);
+        res.render('history', {
             results: results
         });
     });
